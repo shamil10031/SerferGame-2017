@@ -5,14 +5,18 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.shomazzapp.summerserfer.Game;
+import com.shomazzapp.summerserfer.Difficulty;
+import com.shomazzapp.summerserfer.GameApp;
 import com.shomazzapp.summerserfer.Serfer;
 import com.shomazzapp.summerserfer.Sprut;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.shomazzapp.summerserfer.Constants.SPRUT_CIRCLE_RADIUS;
 import static com.shomazzapp.summerserfer.Constants.SPRUT_CREATING_INTERWAL_TIME;
 import static com.shomazzapp.summerserfer.Constants.WORLD_HEIGHT;
 import static com.shomazzapp.summerserfer.Constants.WORLD_WIDTH;
@@ -22,38 +26,39 @@ public class GameScreen implements Screen {
 
     private ArrayList<Sprut> spruts;
 
-    Game game;
-    private SpriteBatch batch;
+    GameApp gameApp;
+    int inputMethod;
     private Serfer serfer;
     private ShapeRenderer renderer;
     private FitViewport viewport;
 
     private long lastSprutCreatedTime;
 
-    public GameScreen (Game game){
-        this.game = game;
+    public GameScreen(GameApp gameApp, int inputMethod) {
+        this.gameApp = gameApp;
+        this.inputMethod = inputMethod;
     }
 
     @Override
     public void show() {
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT);
-        batch = new SpriteBatch();
         renderer = new ShapeRenderer();
-        serfer = new Serfer(renderer);
+        serfer = new Serfer(renderer, inputMethod);
         spruts = new ArrayList<Sprut>();
-        createSprut();
+        lastSprutCreatedTime = System.currentTimeMillis();
     }
 
     @Override
     public void render(float delta) {
-        if (isTimeToAddSprut()) createSprut();
+        System.out.println(serfer.getScore()+"");
+        update();
         Gdx.gl.glClearColor(0, 0.8f, 1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
 
         renderer.setProjectionMatrix(viewport.getCamera().combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-
+        renderer.setColor(1,0,1,1);
         renderer.rectLine(0, 0, 0, WORLD_HEIGHT, 10);
         renderer.rectLine(WORLD_WIDTH, 0, WORLD_WIDTH, WORLD_HEIGHT, 10);
         serfer.render(delta);
@@ -61,16 +66,29 @@ public class GameScreen implements Screen {
         renderer.end();
     }
 
+    public void update() {
+        if (isTimeToAddSprut()){
+            int g = MathUtils.random(0,2);
+            switch (g){
+                case 0 : createSprut(Difficulty.EASY);
+                    break;
+                case 1 : createSprut(Difficulty.NORMAL);
+                    break;
+                case 2 : createSprut(Difficulty.HARD);
+                    break;
+            }
+        }
+    }
+
     public void renderSpruts(float delta) {
-        /*for (Sprut s : spruts) {
-            if (s.isAlive()) s.render(delta);
-            else spruts.remove(s);
-        }*/
         Iterator<Sprut> it = spruts.iterator();
         while (it.hasNext()) {
             Sprut s = it.next();
             if (s.isAlive()) s.render(delta);
-            else it.remove();
+            else {
+                serfer.incScore(s.getScoreValue());
+                it.remove();
+            }
         }
         checkAttackingSpruts();
     }
@@ -79,10 +97,34 @@ public class GameScreen implements Screen {
         return (System.currentTimeMillis() - lastSprutCreatedTime) >= SPRUT_CREATING_INTERWAL_TIME;
     }
 
-    public void createSprut() {
-        //TODO: chek coordinates of other spruts
-        spruts.add(new Sprut(Sprut.getRandomX(), Sprut.getRandomY(), renderer, this));
+    public void createSprut(Difficulty difficulty) {
+        Vector2 v = new Vector2(Sprut.getRandomX(), Sprut.getRandomY());
+        if (!isPositionUnique(v)) {
+            while (!isPositionUnique(v)){
+                v = new Vector2(Sprut.getRandomX(), Sprut.getRandomY());
+            }
+        }
+        spruts.add(new Sprut(v.x, v.y, renderer, this, difficulty));
         lastSprutCreatedTime = System.currentTimeMillis();
+    }
+
+    public ArrayList<Vector2> getSprutsPositions() {
+        ArrayList<Vector2> positions = new ArrayList<Vector2>();
+        for (Sprut sprut : spruts)
+            if (!sprut.isAttacking()) positions.add(sprut.getPosition());
+        return positions;
+    }
+
+    public boolean isPositionUnique(Vector2 position) {
+        boolean bool = true;
+        for (Vector2 pos : getSprutsPositions()) {
+            if (!((position.x - SPRUT_CIRCLE_RADIUS - SPRUT_CIRCLE_RADIUS * 3 >= pos.x)
+                    || (position.x + SPRUT_CIRCLE_RADIUS + SPRUT_CIRCLE_RADIUS * 3 <= pos.x)
+                    || (position.y + SPRUT_CIRCLE_RADIUS + SPRUT_CIRCLE_RADIUS * 2 <= pos.y)
+                    || (position.y - SPRUT_CIRCLE_RADIUS - SPRUT_CIRCLE_RADIUS * 2 >= pos.y)))
+                bool = false;
+        }
+        return bool;
     }
 
     @Override
@@ -107,7 +149,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        renderer.dispose();
     }
 
     public Serfer getSerfer() {
@@ -123,7 +165,8 @@ public class GameScreen implements Screen {
     }
 
     public void gameOver() {
-        game.setGameOverScreen();
+        gameApp.setGameOverScreen();
+        gameApp.changeInputMethod();
     }
 
 }

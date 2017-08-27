@@ -13,11 +13,14 @@ public class Constants {
     public static final int SPRUT_MIN_WAITING_TIME = 2000;
     public static final int SPRUT_MAX_WAITING_TIME = 4000;
     public static final int SPRUT_SWIM_DISTANCE = SPRUT_CIRCLE_RADIUS;
-    public static final float SPRUT_VELOCITY = 1.7f;
 
-    public static final int SPRUT_CREATING_INTERWAL_TIME = 1500;
+    public static final float SPRUT_VELOCITY_EASY = 1.6f;
+    public static final float SPRUT_VELOCITY_NORMAL = 1.9f;
+    public static final float SPRUT_VELOCITY_HARD = 2.4f;
 
-    public static final float ACCELEROMETER_SENSITIVITY = 0.2f;
+    public static final int SPRUT_CREATING_INTERWAL_TIME = 2100;
+
+    public static final float ACCELEROMETER_SENSITIVITY = 0.25f;
     public static final float GRAVITATIONAL_ACCELERATION = 9.8f;
 
     public static final int INPUT_METHOD_ACCELEROMETR = 1;
