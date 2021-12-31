@@ -8,12 +8,14 @@
 Управление доступно в двух вариациях: наклон устройства или касания. Движения серфера происходит по горизонтали влево—вправо.
 
 Разработка игры остановилась на этапе прототипа: основная логика игры реализована, но спрайты не внедрены (на месте серыера рисуется прямоугольник, а на месте осьминогов — круги соответствующих цветов).
-![image](https://user-images.githubusercontent.com/17685189/147832129-be6f8c1a-1a8d-46d0-bb41-14de588e3809.jpeg)
 
-![image](https://user-images.githubusercontent.com/17685189/147832140-379ee401-399e-4593-a9fa-66d6751c9d67.jpeg)
+Скетчи:
 
-![image](https://user-images.githubusercontent.com/17685189/147832148-3a7a6ffd-cd20-42fa-9539-60936587aee9.jpeg)
+<img src="https://user-images.githubusercontent.com/17685189/147832129-be6f8c1a-1a8d-46d0-bb41-14de588e3809.jpeg" width="300">  <img src="https://user-images.githubusercontent.com/17685189/147832140-379ee401-399e-4593-a9fa-66d6751c9d67.jpeg" width="300">
 
-![image](https://user-images.githubusercontent.com/17685189/147832203-8fbae730-54c6-4f37-b6ef-f4e7e47f4152.jpeg)
+<img src="https://user-images.githubusercontent.com/17685189/147832148-3a7a6ffd-cd20-42fa-9539-60936587aee9.jpeg" width="300">   <img src="https://user-images.githubusercontent.com/17685189/147832240-3f39c19d-c13c-49fb-abca-ce1487962e14.jpeg" width="300">
 
-![image](https://user-images.githubusercontent.com/17685189/147832240-3f39c19d-c13c-49fb-abca-ce1487962e14.jpeg)
+
+Пример спрайта плавания осьминога простого уровня:
+
+<img src="https://user-images.githubusercontent.com/17685189/147832203-8fbae730-54c6-4f37-b6ef-f4e7e47f4152.jpeg" width="600">
