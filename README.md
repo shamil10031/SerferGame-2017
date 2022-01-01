@@ -22,4 +22,4 @@
 
 Прототип игры, на котором видна механика игры и два варианта управления серфером (варианты меняются автоматически после "Game Over"):
 
-![2022-01-01 23 25 50 (1)](https://user-images.githubusercontent.com/17685189/147859595-9d3bec8d-dbed-4491-8c6c-cdf88f6a5c62.gif)
+<img src="https://user-images.githubusercontent.com/17685189/147859595-9d3bec8d-dbed-4491-8c6c-cdf88f6a5c62.gif" width="300"/>
